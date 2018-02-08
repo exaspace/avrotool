@@ -1,0 +1,21 @@
+{
+  "type": "record",
+  "namespace": "example",
+  "name": "User",
+  "fields": [
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "number",
+      "type": "int",
+      "default": -1
+    },
+    {
+      "name": "colour",
+      "type": "string",
+      "default": "blue"
+    }
+  ]
+}
