@@ -1,5 +1,6 @@
 package org.exaspace.avrotool
 
+import org.exaspace.avrotool.CompatibilityLevels._
 import org.scalatest.{FlatSpec, Matchers}
 
 

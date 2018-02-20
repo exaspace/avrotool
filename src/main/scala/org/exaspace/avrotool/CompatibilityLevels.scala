@@ -1,19 +1,19 @@
 package org.exaspace.avrotool
 
 
-sealed abstract class CompatibilityLevel(val value: String) {
-  override def toString() = value
-}
+object CompatibilityLevels {
 
-case object Full extends CompatibilityLevel("FULL")
+  sealed abstract class CompatibilityLevel(val value: String) {
+    override def toString() = value
+  }
 
-case object Backward extends CompatibilityLevel("BACKWARD")
+  case object Full extends CompatibilityLevel("FULL")
 
-case object Forward extends CompatibilityLevel("FORWARD")
+  case object Backward extends CompatibilityLevel("BACKWARD")
 
-case object None extends CompatibilityLevel("NONE")
+  case object Forward extends CompatibilityLevel("FORWARD")
 
-object CompatibilityLevel {
+  case object None extends CompatibilityLevel("NONE")
 
   def apply(s: String): CompatibilityLevel = s match {
     case Full.value => Full

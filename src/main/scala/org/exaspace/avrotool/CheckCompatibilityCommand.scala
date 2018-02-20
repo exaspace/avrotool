@@ -2,9 +2,9 @@ package org.exaspace.avrotool
 
 import java.nio.file.Path
 
+import org.exaspace.avrotool.CompatibilityLevels.CompatibilityLevel
 import spray.json.DefaultJsonProtocol._
 import spray.json._
-
 
 class CheckCompatibilityCommand(console: ConsoleOutput) {
 
@@ -15,7 +15,7 @@ class CheckCompatibilityCommand(console: ConsoleOutput) {
       case JsonOutput => reportJson(schemaFiles, levels)
       case PlainOutput => reportPlainText(levels)
     }
-    desiredLevel.map(CompatibilityLevel.meetsLevel(levels, _)).getOrElse(true)
+    desiredLevel.map(CompatibilityLevels.meetsLevel(levels, _)).getOrElse(true)
   }
 
   private def reportJson(files: Seq[Path], levels: Seq[CompatibilityLevel]): Unit = {

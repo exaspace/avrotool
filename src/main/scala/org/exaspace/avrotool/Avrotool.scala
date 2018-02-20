@@ -1,9 +1,6 @@
 package org.exaspace.avrotool
 
-import java.io.{ByteArrayInputStream, InputStream}
-import java.nio.file.{Path, Paths}
-
-import org.apache.avro._
+import java.nio.file.Paths
 
 
 object Avrotool {
@@ -15,6 +12,7 @@ object Avrotool {
     val console = new ConsoleOutput {
       override def print(x: Any): Unit = System.out.print(x)
       override def println(x: Any): Unit = System.out.println(x)
+      override def debug(x: Any): Unit = System.err.println(s"* $x")
     }
 
     val ok: Boolean = conf.action match {
@@ -23,18 +21,18 @@ object Avrotool {
         new CheckCompatibilityCommand(console).check(
           conf.schemaFiles().map(Paths.get(_)),
           OutputFormat(conf.format()),
-          conf.level.toOption.map(CompatibilityLevel(_)))
+          conf.level.toOption.map(CompatibilityLevels(_)))
 
       case Actions.DecodeDatum =>
         new DecodeDatumCommand(console).decode(
           Paths.get(conf.datumFile()),
-          registry(conf.schemaRegistryUrl()))
+          registryClient(conf.schemaRegistryUrl()))
 
       case Actions.Register =>
         new RegisterSchemaCommand(console).register(
           Paths.get(conf.schemaFile()),
           conf.subject(),
-          registry(conf.schemaRegistryUrl()))
+          registryClient(conf.schemaRegistryUrl()))
 
       case _ =>
         println("No action specified")
@@ -44,34 +42,6 @@ object Avrotool {
     System.exit(if (ok) 0 else 1)
   }
 
-  private def registry(url: String) = new RegistryHttpClient(url)
+  private def registryClient(url: String) = new RegistryHttpClient(url)
 
 }
-
-
-
-object ParseSchema {
-
-  def fromFile(filePath: Path): Schema = {
-    val url = filePath.toUri.toURL
-    val is = url.openStream
-    try {
-      fromStream(is)
-    } finally {
-      is.close()
-    }
-  }
-
-  def fromString(s: String): Schema = {
-    val is = new ByteArrayInputStream(s.getBytes("UTF-8"))
-    try {
-      fromStream(is)
-    } finally {
-      is.close()
-    }
-  }
-
-  private def fromStream(is: InputStream): Schema = new Schema.Parser().parse(is)
-
-}
-

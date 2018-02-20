@@ -18,15 +18,17 @@ Check the compatibility level of schema4 with each of schemas 1-3:
 
 Check if schema4 has at least BACKWARD compatibility with each of schemas 1-3 (exit code will be non-zero if the minimum level is not met by each):
 
-    $ avrotool --checkcompat --schema-files schema4.avsc schema3.avsc schema2.avsc schema1.avsc  --level BACKWARD
+    $ avrotool --checkcompat \
+            --schema-files schema4.avsc schema3.avsc schema2.avsc schema1.avsc  \
+            --level BACKWARD
     FULL BACKWARD FULL
 
-For JSON output use `--format json`:
+You can get JSON output using `--format json`:
 
     $ avrotool --checkcompat --schema-files schema2.avsc schema1.avsc --format json
     {"schema1.json":"FULL"}
 
-Decode a Confluent Avro datum
+Decode a Confluent Avro datum (will fetch the schema from the provided registry)
 
     $ avrotool --decode --datum foo.avro --schema-registry-url http://myregistry.com/
 
@@ -34,17 +36,32 @@ Decode a Confluent Avro datum
 
 # Installation (non-docker)
 
-Install a jdk and sbt, then from the top level of the project run:
 
-    sbt pack
+First ensure you have a JDK (version 8+) and [sbt](https://www.scala-sbt.org/download.html) installed (e.g. `brew install sbt`) 
+
+Clone this project and then from the top level run
+
+
+    $ sbt pack
+    $ cd avrotool/target/pack/
+    $ sudo make install PREFIX=/usr/local
+
+
+Check it works (run from the project top level using the provided example schemas):
+
     
-This builds an executable you can run with `./target/pack/bin/avrotool`. The following should work:
-
-    $ ./target/pack/bin/avrotool --checkcompat ./examples/schema1.json ./examples/schema2.json
+    $ avrotool --checkcompat --schema-files ./examples/schema1.json ./examples/schema2.json
     FULL
 
 
-# Compatibility explained
+If you want to install `avrotool` somewhere else, set the PREFIX variable 
+
+    make install PREFIX="$HOME"             # will install avrotool to ~/bin 
+    sudo make install PREFIX=/opt/local     # will install avrotool to /opt/local/bin
+    make install                            # will install avrotool to ~/local/bin (tip: add `~/local/bin` to your `PATH`).
+
+
+# Schema compatibility explained
 
 Compatibility level can be one of "BACKWARD", "FORWARD", "FULL" or "NONE" (i.e. following the [confluent convention](https://docs.confluent.io/current/avro.html)).
 
@@ -86,16 +103,18 @@ Example of a sequence of changes
 
 Consider the following sequence of 4 schemas where (d) means "field has a default value"
 
-schema1 : name (d)
-schema2 : name, number (d)
-schema3 : name, number, colour (d)
-schema4 : number (d), colour
+    schema1 : name (d)
+    schema2 : name, number (d)
+    schema3 : name, number, colour (d)
+    schema4 : number (d), colour
 
-4->3: BACKWARDS
-4->2: NONE
-4->1: FORWARDS
+Then the following pairwise compatibility relationships exist:
 
-3->2: FULL
-3->1: FORWARDS
-
-2->1: FULL
+    4->3: BACKWARDS
+    4->2: NONE
+    4->1: FORWARDS
+    
+    3->2: FULL
+    3->1: FORWARDS
+    
+    2->1: FULL

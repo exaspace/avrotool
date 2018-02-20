@@ -30,7 +30,7 @@ class DecodeDatumCommandSpec extends FlatSpec with Matchers {
   val testingConsole = new TestingConsole
 
   "DecodeDatumCommand" should "decode a datum file using schema from the registry" in {
-    val testingRegistry = new TestingRegistry(userSchema)
+    val testingRegistry = new TestSchemaRegistry(userSchema)
     val datumFile = Paths.get(File.createTempFile("datum", ".tmp").getAbsolutePath)
     val record = new GenericData.Record(userSchema)
     record.put("name", "foo")
@@ -57,21 +57,11 @@ class DecodeDatumCommandSpec extends FlatSpec with Matchers {
     out.toByteArray()
   }
 
-}
+  class TestSchemaRegistry(s: Schema) extends RegistryClient {
 
-class TestingConsole extends ConsoleOutput {
+    override def register(subject: String, s: Schema): Option[Int] = ???
 
-  val s = new StringBuilder
+    override def fetchById(id: Int): Option[Schema] = Some(s)
+  }
 
-  override def print(x: Any): Unit = s.append(x)
-
-  override def println(x: Any): Unit = s.append(x).append("\n")
-}
-
-
-class TestingRegistry(s: Schema) extends RegistryClient {
-
-  override def register(subject: String, s: Schema): Option[Int] = ???
-
-  override def fetchById(id: Int): Option[Schema] = Some(s)
 }

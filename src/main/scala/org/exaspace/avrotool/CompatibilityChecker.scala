@@ -1,6 +1,7 @@
 package org.exaspace.avrotool
 
 import org.apache.avro.{Schema, SchemaValidationException, SchemaValidator, SchemaValidatorBuilder}
+import org.exaspace.avrotool.CompatibilityLevels._
 
 import scala.collection.JavaConverters._
 
