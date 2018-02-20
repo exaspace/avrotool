@@ -1,0 +1,11 @@
+{
+  "type": "record",
+  "namespace": "example",
+  "name": "House",
+  "fields": [
+    {
+      "name": "zipcode",
+      "type": "string"
+    }
+  ]
+}

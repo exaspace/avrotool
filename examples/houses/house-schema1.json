@@ -8,14 +8,15 @@
       "type": "string"
     },
     {
-      "name": "street",
+      "name": "streetData",
+      "default": null,
       "type": {
         "type": "record",
-        "name": "Street",
+        "name": "StreetData",
         "namespace": "example",
         "fields": [
           {
-            "name": "name",
+            "name": "streetName",
             "type": "string"
           },
           {
