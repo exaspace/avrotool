@@ -1,6 +1,6 @@
 package org.exaspace.avrotool
 
-import org.apache.avro.{Schema, SchemaValidationException, SchemaValidator, SchemaValidatorBuilder}
+import org.apache.avro._
 import org.exaspace.avrotool.CompatibilityLevels._
 
 import scala.collection.JavaConverters._
@@ -31,7 +31,7 @@ object CompatibilityChecker {
       v.validate(s1, Seq(s2).asJava)
       true
     } catch {
-      case e: SchemaValidationException =>
+      case _: SchemaValidationException | _: AvroTypeException =>
         false
     }
   }

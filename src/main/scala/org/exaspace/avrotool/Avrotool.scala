@@ -13,14 +13,10 @@ object Avrotool {
       override def print(x: Any): Unit = System.out.print(x)
       override def println(x: Any): Unit = System.out.println(x)
       override def debug(x: Any): Unit = System.err.println(s"* $x")
+      override def write(bytes: Array[Byte]): Unit = System.out.write(bytes)
     }
 
     val ok: Boolean = conf.action match {
-
-      case Actions.ValidateSchema =>
-        new ValidateSchemaCommand(console).validate(
-          Paths.get(conf.schemaFile()),
-          OutputFormat(conf.format()))
 
       case Actions.CheckCompat =>
         new CheckCompatibilityCommand(console).check(
@@ -38,6 +34,14 @@ object Avrotool {
           Paths.get(conf.schemaFile()),
           conf.subject(),
           registryClient(conf.schemaRegistryUrl()))
+
+      case Actions.UnwrapDatum =>
+        new UnwrapCommand(console).unwrap(Paths.get(conf.datumFile()))
+
+      case Actions.ValidateSchema =>
+        new ValidateSchemaCommand(console).validate(
+          Paths.get(conf.schemaFile()),
+          OutputFormat(conf.format()))
 
       case _ =>
         println("No action specified")

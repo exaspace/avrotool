@@ -1,31 +1,8 @@
 {
-  "type": "record",
-  "namespace": "example",
-  "name": "House",
-  "fields": [
-    {
-      "name": "zipcode",
-      "type": "string"
-    },
-    {
-      "name": "streetData",
-      "default": null,
-      "type": {
-        "type": "record",
-        "name": "StreetData",
-        "namespace": "example",
-        "fields": [
-          {
-            "name": "streetName",
-            "type": "string"
-          },
-          {
-            "name": "number",
-            "type": "int"
-          }
-        ]
-      }
+  "zipcode": "abc123",
+  "streetData": {
+    "streetName": "Bong St",
+    "number": 34
+  }
 
-    }
-  ]
 }

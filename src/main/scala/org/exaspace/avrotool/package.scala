@@ -21,9 +21,10 @@ package object avrotool {
   }
 
   trait ConsoleOutput {
-    def print(x: Any)
-    def println(x: Any)
-    def debug(x: Any)
+    def print(x: Any): Unit
+    def println(x: Any): Unit
+    def debug(x: Any): Unit
+    def write(x: Array[Byte]): Unit
   }
 
   object ParseSchema {

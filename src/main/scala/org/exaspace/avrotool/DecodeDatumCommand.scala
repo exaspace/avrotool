@@ -1,7 +1,6 @@
 package org.exaspace.avrotool
 
 import java.io.ByteArrayInputStream
-import java.nio.ByteBuffer
 import java.nio.file.{Files, Path}
 
 import org.apache.avro.Schema
@@ -13,18 +12,14 @@ class DecodeDatumCommand(console: ConsoleOutput) {
 
   def decode(datumFileName: Path, schemaRegistryClient: RegistryClient): Boolean = {
     val datumBytes = Files.readAllBytes(datumFileName)
-    val byteBuffer = ByteBuffer.wrap(datumBytes)
-    val magic = byteBuffer.get()
-    assert(magic == 0x0, "Magic byte must be zero")
-    val schemaId = byteBuffer.getInt()
-    val length = byteBuffer.limit() - 5
-    val avroBytes = byteBuffer.array().slice(byteBuffer.position(), byteBuffer.limit())
-    console.debug(s"schemaId=$schemaId")
 
-    val maybeSchema = schemaRegistryClient.fetchById(schemaId)
+    val confluentBinary = ConfluentFormat.parse(datumBytes)
+    console.debug(s"schemaId: ${confluentBinary.schemaId}")
+
+    val maybeSchema = schemaRegistryClient.fetchById(confluentBinary.schemaId)
     maybeSchema match {
       case Some(schema) =>
-        val record = unmarshal(avroBytes, schema, schema)
+        val record = unmarshal(confluentBinary.avroBytes, schema, schema)
         console.println(record)
         true
       case scala.None =>

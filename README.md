@@ -9,7 +9,9 @@ A CLI tool for comparing Avro schemas and working with the Confluent flavour of 
 * the standard Apache Avro tools do not understand anything about schema registries, or the Confluent Avro binary format (which contains a 5 byte prefix)
 
 
-# Example usage
+# Example usages
+
+## Check compatibility between Avro schemas
 
 Check the compatibility level of schema4 with each of schemas 1-3:
 
@@ -28,13 +30,23 @@ You can get JSON output using `--format json`:
     $ avrotool --checkcompat --schema-files schema2.avsc schema1.avsc --format json
     {"schema1.json":"FULL"}
 
-Decode a Confluent Avro datum (will fetch the schema from the provided registry)
-
-    $ avrotool --decode --datum foo.avro --schema-registry-url http://myregistry.com/
+## Check an Avro schema is valid
 
 Check that an Avro schema is valid (exit code non-zero if invalid) 
 
     $ avrotool --validate-schema --schema-file schema.json
+
+## Decode a Confluent Avro binary datum 
+
+Decode a Confluent Avro datum (will fetch the schema from the provided registry)
+
+    $ avrotool --decode --datum-file foo.cavro --schema-registry-url http://myregistry.com/
+
+## Convert a Confluent Avro binary datum to a plain Avro binary datum 
+
+Remove the initial 5 byte prefix from a Confluent Avro binary datum 
+
+    $ avrotool --unwrap-datum --datum-file datum.cavro > datum.avro
 
 
 # Installation (non-docker)
@@ -44,7 +56,6 @@ First ensure you have a JDK (version 8+) and [sbt](https://www.scala-sbt.org/dow
 
 Clone this project and then from the top level run
 
-
     $ sbt pack
     $ cd avrotool/target/pack/
     $ sudo make install PREFIX=/usr/local
@@ -52,10 +63,8 @@ Clone this project and then from the top level run
 
 Check it works (run from the project top level using the provided example schemas):
 
-    
     $ avrotool --checkcompat --schema-files ./examples/schema1.json ./examples/schema2.json
     FULL
-
 
 If you want to install `avrotool` somewhere else, set the PREFIX variable 
 

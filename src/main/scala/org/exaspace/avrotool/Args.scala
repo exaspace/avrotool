@@ -7,6 +7,7 @@ object Actions {
   val CheckCompat = "checkcompat"
   val DecodeDatum = "decode-datum"
   val Register = "register"
+  val UnwrapDatum = "unwrap-datum"
   val ValidateSchema = "validate-schema"
 }
 
@@ -32,6 +33,11 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     name = Actions.Register,
     noshort = true,
     descr = "register a schema (requires --schema-files, --schema-registry-url and --subject)")
+
+  val unwrapDatum = opt[Boolean](
+    name = Actions.UnwrapDatum,
+    noshort = true,
+    descr = "remove initial 5 byte prefix from a Confluent Avro binary datum (requires --datum-file)")
 
   val validateSchema = opt[Boolean](
     name = Actions.ValidateSchema,
@@ -88,11 +94,12 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     noshort = false,
     descr = "log verbose info")
 
-  private val actions = Seq(checkcompat, decodeDatum, register, validateSchema)
+  private val actions = Seq(checkcompat, decodeDatum, register, unwrapDatum, validateSchema)
 
   dependsOnAll(checkcompat, List(schemaFiles))
   dependsOnAll(decodeDatum, List(datumFile, schemaRegistryUrl))
   dependsOnAll(register, List(schemaFile, subject, schemaRegistryUrl))
+  dependsOnAll(unwrapDatum, List(datumFile))
   dependsOnAll(validateSchema, List(schemaFile))
   mutuallyExclusive(actions: _*)
   requireOne(actions: _*)
