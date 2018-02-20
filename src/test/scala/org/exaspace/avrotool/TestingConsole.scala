@@ -3,12 +3,16 @@ package org.exaspace.avrotool
 
 class TestingConsole extends ConsoleOutput {
 
-  val stdout = new StringBuilder
-  val stderr = new StringBuilder
+  private val sbStdout = new StringBuilder
+  private val sbStderr = new StringBuilder
 
-  override def print(x: Any): Unit = stdout.append(x)
+  override def print(x: Any): Unit = sbStdout.append(x)
 
-  override def println(x: Any): Unit = stdout.append(x).append("\n")
+  override def println(x: Any): Unit = sbStdout.append(x).append("\n")
 
-  override def debug(x: Any): Unit = stderr.append(x).append("\n")
+  override def debug(x: Any): Unit = sbStderr.append(x).append("\n")
+
+  def stdout: String = sbStdout.toString
+
+  def stderr: String = sbStderr.toString
 }

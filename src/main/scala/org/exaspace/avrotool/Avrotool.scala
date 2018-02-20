@@ -17,6 +17,11 @@ object Avrotool {
 
     val ok: Boolean = conf.action match {
 
+      case Actions.ValidateSchema =>
+        new ValidateSchemaCommand(console).validate(
+          Paths.get(conf.schemaFile()),
+          OutputFormat(conf.format()))
+
       case Actions.CheckCompat =>
         new CheckCompatibilityCommand(console).check(
           conf.schemaFiles().map(Paths.get(_)),

@@ -1,8 +1,7 @@
 package org.exaspace.avrotool
 
-import java.io.{ByteArrayOutputStream, File}
+import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
-import java.nio.file.{Files, Paths}
 
 import org.apache.avro.Schema
 import org.apache.avro.generic.{GenericData, GenericDatumWriter}
@@ -10,7 +9,7 @@ import org.apache.avro.io.EncoderFactory
 import org.scalatest.{FlatSpec, Matchers}
 
 
-class DecodeDatumCommandSpec extends FlatSpec with Matchers {
+class DecodeDatumCommandSpec extends FlatSpec with Matchers with TempFiles {
 
   val userSchema = ParseSchema.fromString(
     """{
@@ -31,12 +30,13 @@ class DecodeDatumCommandSpec extends FlatSpec with Matchers {
 
   "DecodeDatumCommand" should "decode a datum file using schema from the registry" in {
     val testingRegistry = new TestSchemaRegistry(userSchema)
-    val datumFile = Paths.get(File.createTempFile("datum", ".tmp").getAbsolutePath)
     val record = new GenericData.Record(userSchema)
     record.put("name", "foo")
     val avroBytes = toAvro(record)
-    Files.write(datumFile, toConfluentAvroBinary(123, avroBytes))
-    new DecodeDatumCommand(testingConsole).decode(datumFile, testingRegistry) shouldBe true
+    val confluentWrappedBytes = toConfluentAvroBinary(123, avroBytes)
+    withTempFile(confluentWrappedBytes) { path =>
+      new DecodeDatumCommand(testingConsole).decode(path, testingRegistry) shouldBe true
+    }
   }
 
   def toConfluentAvroBinary(id: Int, b: Array[Byte]): Array[Byte] = {

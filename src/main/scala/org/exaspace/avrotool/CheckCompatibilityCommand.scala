@@ -6,6 +6,7 @@ import org.exaspace.avrotool.CompatibilityLevels.CompatibilityLevel
 import spray.json.DefaultJsonProtocol._
 import spray.json._
 
+
 class CheckCompatibilityCommand(console: ConsoleOutput) {
 
   def check(schemaFiles: List[Path], format: OutputFormat, desiredLevel: Option[CompatibilityLevel]): Boolean = {

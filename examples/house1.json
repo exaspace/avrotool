@@ -1,0 +1,30 @@
+{
+  "type": "record",
+  "namespace": "example",
+  "name": "House",
+  "fields": [
+    {
+      "name": "zipcode",
+      "type": "string"
+    },
+    {
+      "name": "street",
+      "type": {
+        "type": "record",
+        "name": "Street",
+        "namespace": "example",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "number",
+            "type": "int"
+          }
+        ]
+      }
+
+    }
+  ]
+}

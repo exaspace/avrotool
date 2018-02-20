@@ -76,6 +76,16 @@ class ArgsSpec extends FlatSpec with Matchers {
     shouldFail(new Args(Seq("--register", "--schema-file", "foo.avsc", "--subject", "foo")))
   }
 
+  "--validate" should "accept --schema-file" in {
+    val conf = new Args(Seq("--validate", "--schema-file", "foo.avsc"))
+    conf.validateSchema() shouldBe true
+    conf.schemaFile() shouldBe "foo.avsc"
+  }
+
+  it should "fail if missing --schema-file" in {
+    shouldFail(new Args(Seq("--validate")))
+  }
+
   private def shouldFail(thunk: => Unit) = {
     throwError.withValue(true) {
       assertThrows[Exception] {

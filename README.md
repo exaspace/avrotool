@@ -32,6 +32,9 @@ Decode a Confluent Avro datum (will fetch the schema from the provided registry)
 
     $ avrotool --decode --datum foo.avro --schema-registry-url http://myregistry.com/
 
+Check that an Avro schema is valid (exit code non-zero if invalid) 
+
+    $ avrotool --validate-schema --schema-file schema.json
 
 
 # Installation (non-docker)
