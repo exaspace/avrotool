@@ -11,7 +11,7 @@ A CLI tool for comparing Avro schemas and working with the Confluent flavour of 
 
 # Example usages
 
-## Check compatibility between Avro schemas
+**Check compatibility between Avro schemas**
 
 Check the compatibility level of schema4 with each of schemas 1-3:
 
@@ -30,23 +30,26 @@ You can get JSON output using `--format json`:
     $ avrotool --checkcompat --schema-files schema2.avsc schema1.avsc --format json
     {"schema1.json":"FULL"}
 
-## Check an Avro schema is valid
 
-Check that an Avro schema is valid (exit code non-zero if invalid) 
+**Check an Avro schema is valid** 
 
     $ avrotool --validate-schema --schema-file schema.json
+    VALID
 
-## Decode a Confluent Avro binary datum 
 
-Decode a Confluent Avro datum (will fetch the schema from the provided registry)
+**Decode a Confluent Avro binary datum and print as JSON (fetching the schema from the schema registry)**
 
     $ avrotool --decode --datum-file foo.cavro --schema-registry-url http://myregistry.com/
+    { "name": "fred" }
 
-## Convert a Confluent Avro binary datum to a plain Avro binary datum 
-
-Remove the initial 5 byte prefix from a Confluent Avro binary datum 
+**Convert a Confluent Avro binary datum to a plain Avro binary datum** 
 
     $ avrotool --unwrap-datum --datum-file datum.cavro > datum.avro
+
+
+**Convert a plain Avro binary datum to a Confluent Avro binary datum** 
+
+    $ avrotool --wrap-datum --datum-file datum.avro --schema-id 123 > datum.cavro
 
 
 # Installation (non-docker)

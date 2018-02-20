@@ -9,6 +9,7 @@ object Actions {
   val Register = "register"
   val UnwrapDatum = "unwrap-datum"
   val ValidateSchema = "validate-schema"
+  val WrapDatum = "wrap-datum"
 }
 
 class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
@@ -44,15 +45,22 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     noshort = true,
     descr = "validate a schema (requires --schema-file)")
 
+  val wrapDatum = opt[Boolean](
+    name = Actions.WrapDatum,
+    noshort = true,
+    descr = "apply initial 5 byte prefix to a plain Avro binary datum (requires --datum-file and --schema-id)")
 
+
+
+  val schemaId = opt[Int](
+    name = "schema-id",
+    noshort = true,
+    descr ="""an integer schema ID""")
 
   val schemaFile = opt[String](
     name = "schema-file",
     noshort = true,
-    descr =
-      """
-        |an Avro schema filename
-      """.stripMargin)
+    descr ="""an Avro schema filename""")
 
   val schemaFiles = opt[List[String]](
     name = "schema-files",
@@ -94,13 +102,14 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     noshort = false,
     descr = "log verbose info")
 
-  private val actions = Seq(checkcompat, decodeDatum, register, unwrapDatum, validateSchema)
+  private val actions = Seq(checkcompat, decodeDatum, register, unwrapDatum, validateSchema, wrapDatum)
 
   dependsOnAll(checkcompat, List(schemaFiles))
   dependsOnAll(decodeDatum, List(datumFile, schemaRegistryUrl))
   dependsOnAll(register, List(schemaFile, subject, schemaRegistryUrl))
   dependsOnAll(unwrapDatum, List(datumFile))
   dependsOnAll(validateSchema, List(schemaFile))
+  dependsOnAll(wrapDatum, List(datumFile, schemaId))
   mutuallyExclusive(actions: _*)
   requireOne(actions: _*)
   verify()

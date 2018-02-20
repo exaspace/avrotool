@@ -11,7 +11,7 @@ class UnwrapCommand(console: ConsoleOutput) {
   def unwrap(datumFile: Path): Boolean = {
     try {
       val confluentBytes = Files.readAllBytes(datumFile)
-      val confluentBinary = ConfluentFormat.parse(confluentBytes)
+      val confluentBinary = ConfluentBinary(confluentBytes)
       console.write(confluentBinary.avroBytes)
       true
     }

@@ -13,7 +13,7 @@ class DecodeDatumCommand(console: ConsoleOutput) {
   def decode(datumFileName: Path, schemaRegistryClient: RegistryClient): Boolean = {
     val datumBytes = Files.readAllBytes(datumFileName)
 
-    val confluentBinary = ConfluentFormat.parse(datumBytes)
+    val confluentBinary = ConfluentBinary(datumBytes)
     console.debug(s"schemaId: ${confluentBinary.schemaId}")
 
     val maybeSchema = schemaRegistryClient.fetchById(confluentBinary.schemaId)

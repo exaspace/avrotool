@@ -43,6 +43,9 @@ object Avrotool {
           Paths.get(conf.schemaFile()),
           OutputFormat(conf.format()))
 
+      case Actions.WrapDatum =>
+        new WrapCommand(console).wrap(Paths.get(conf.datumFile()), conf.schemaId())
+
       case _ =>
         println("No action specified")
         conf.printHelp()
