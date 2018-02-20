@@ -92,6 +92,11 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     noshort = true,
     descr = "a file containing a single datum encoded in Confluent Avro binary format")
 
+  val readerSchemaFile = opt[String](
+    name = "reader-schema-file",
+    noshort = true,
+    descr = "schema file to use as reader schema")
+
   val subject = opt[String](
     name = "subject",
     noshort = true,
@@ -102,10 +107,17 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     noshort = false,
     descr = "log verbose info")
 
+  val writerSchemaFile = opt[String](
+    name = "writer-schema-file",
+    noshort = true,
+    descr = "schema file to use as writer schema")
+
+
   private val actions = Seq(checkcompat, decodeDatum, register, unwrapDatum, validateSchema, wrapDatum)
 
   dependsOnAll(checkcompat, List(schemaFiles))
-  dependsOnAll(decodeDatum, List(datumFile, schemaRegistryUrl))
+  dependsOnAll(decodeDatum, List(datumFile))
+  dependsOnAny(decodeDatum, List(schemaRegistryUrl, writerSchemaFile))
   dependsOnAll(register, List(schemaFile, subject, schemaRegistryUrl))
   dependsOnAll(unwrapDatum, List(datumFile))
   dependsOnAll(validateSchema, List(schemaFile))

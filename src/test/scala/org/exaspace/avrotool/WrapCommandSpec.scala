@@ -3,7 +3,7 @@ package org.exaspace.avrotool
 import org.scalatest.{FlatSpec, Matchers}
 
 
-class WrapCommandSpec extends FlatSpec with Matchers with TempFiles {
+class WrapCommandSpec extends FlatSpec with Matchers with TempFileSupport {
 
   "WrapCommand" should "add initial Confluent bytes" in {
     withTempFile(Array[Byte](1, 2)) { plainAvroFile =>

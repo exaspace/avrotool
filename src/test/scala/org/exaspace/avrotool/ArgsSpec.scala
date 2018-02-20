@@ -49,12 +49,23 @@ class ArgsSpec extends FlatSpec with Matchers {
     conf.schemaRegistryUrl() shouldBe "http://someurl"
   }
 
+  it should "accept --datum-file and --writer-schema-file" in {
+    val conf = new Args(Seq("--decode-datum", "--datum-file", "foo.cavro", "--writer-schema-file", "schema.json"))
+    conf.decodeDatum() shouldBe true
+    conf.datumFile() shouldBe "foo.cavro"
+    conf.writerSchemaFile() shouldBe "schema.json"
+  }
+
   it should "fail if missing --datum-file" in {
     shouldFail(new Args(Seq("--decode-datum", "--schema-registry-url", "http://someurl")))
   }
 
-  it should "fail if missing --schema-registry-url" in {
+  it should "fail if missing --schema-registry-url and --writer-schema-file" in {
     shouldFail(new Args(Seq("--decode-datum", "--datum-file", "foo.avro")))
+  }
+
+  it should "fail if only --reader-schema-file provided" in {
+    shouldFail(new Args(Seq("--decode-datum", "--datum-file", "foo.avro", "--reader-schema-file", "schema.json")))
   }
 
   "--register" should "accept --schema-file and --schema-registry-url" in {

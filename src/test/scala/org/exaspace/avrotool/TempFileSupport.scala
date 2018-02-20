@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path, Paths}
 
 
-trait TempFiles {
+trait TempFileSupport {
 
   def withTempFile[T](contents: String)(func: (Path) => T): T = {
     withTempFile(contents.getBytes(StandardCharsets.UTF_8)) { path =>

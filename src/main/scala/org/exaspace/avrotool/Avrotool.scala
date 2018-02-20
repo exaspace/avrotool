@@ -11,8 +11,11 @@ object Avrotool {
 
     val console = new ConsoleOutput {
       override def print(x: Any): Unit = System.out.print(x)
+
       override def println(x: Any): Unit = System.out.println(x)
+
       override def debug(x: Any): Unit = System.err.println(s"* $x")
+
       override def write(bytes: Array[Byte]): Unit = System.out.write(bytes)
     }
 
@@ -25,9 +28,22 @@ object Avrotool {
           conf.level.toOption.map(CompatibilityLevels(_)))
 
       case Actions.DecodeDatum =>
-        new DecodeDatumCommand(console).decode(
-          Paths.get(conf.datumFile()),
-          registryClient(conf.schemaRegistryUrl()))
+        val cmd = new DecodeDatumCommand(console)
+        if (conf.writerSchemaFile.isSupplied && conf.readerSchemaFile.isSupplied) {
+          cmd.decode(
+            Paths.get(conf.datumFile()),
+            writerSchema = ParseSchema.fromFile(Paths.get(conf.writerSchemaFile())),
+            readerSchema = ParseSchema.fromFile(Paths.get(conf.readerSchemaFile())))
+        }
+        else if (conf.writerSchemaFile.isSupplied) {
+          cmd.decode(
+            Paths.get(conf.datumFile()),
+            writerSchema = ParseSchema.fromFile(Paths.get(conf.writerSchemaFile())))
+        } else {
+          cmd.decode(
+            Paths.get(conf.datumFile()),
+            registryClient(conf.schemaRegistryUrl()))
+        }
 
       case Actions.Register =>
         new RegisterSchemaCommand(console).register(

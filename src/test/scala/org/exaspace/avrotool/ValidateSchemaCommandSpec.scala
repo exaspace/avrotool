@@ -4,7 +4,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import spray.json._
 
 
-class ValidateSchemaCommandSpec extends FlatSpec with Matchers with TempFiles {
+class ValidateSchemaCommandSpec extends FlatSpec with Matchers with TempFileSupport {
 
   val validSchema = """{  "type": "string",  "name": "foo"  }"""
   val invalidSchema = """{  "type": "str",  "name": "foo"  }"""

@@ -5,7 +5,7 @@ import java.nio.file.Path
 import spray.json.DefaultJsonProtocol._
 import spray.json._
 
-import scala.util.Try
+import scala.util.{Failure, Try}
 
 
 /**
@@ -14,7 +14,12 @@ import scala.util.Try
 class ValidateSchemaCommand(console: ConsoleOutput) {
 
   def validate(schemaFile: Path, format: OutputFormat): Boolean = {
-    val ok = Try(ParseSchema.fromFile(schemaFile)).isSuccess
+    val ok = Try(ParseSchema.fromFile(schemaFile)) match {
+      case Failure(e) =>
+        console.debug(e)
+        false
+      case _ => true
+    }
     format match {
       case PlainOutput => reportPlainText(ok)
       case JsonOutput => reportJson(ok, schemaFile)

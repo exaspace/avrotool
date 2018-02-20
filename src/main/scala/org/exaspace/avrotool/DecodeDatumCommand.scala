@@ -27,6 +27,20 @@ class DecodeDatumCommand(console: ConsoleOutput) {
     }
   }
 
+  def decode(datumFileName: Path, writerSchema: Schema): Boolean = {
+    val datumBytes = Files.readAllBytes(datumFileName)
+    val record = unmarshal(ConfluentBinary(datumBytes).avroBytes, writerSchema, writerSchema)
+    console.println(record)
+    true
+  }
+
+  def decode(datumFileName: Path, writerSchema: Schema, readerSchema: Schema): Boolean = {
+    val datumBytes = Files.readAllBytes(datumFileName)
+    val record = unmarshal(ConfluentBinary(datumBytes).avroBytes, writerSchema, readerSchema)
+    console.println(record)
+    true
+  }
+
   private def unmarshal(bytes: Array[Byte], writerSchema: Schema, readerSchema: Schema): GenericRecord = {
     val reader = new GenericDatumReader[GenericRecord](writerSchema, readerSchema)
     val decoderFactory = DecoderFactory.get()

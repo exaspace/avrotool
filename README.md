@@ -133,3 +133,31 @@ Then the following pairwise compatibility relationships exist:
     3->1: FORWARDS
     
     2->1: FULL
+
+
+Schema authoring
+================
+
+Let's say you have a field "address" of record type (say the record is of type "example.Address") and you want the
+flexibility in future to be able to remove this "address" field and still be fully compatible.
+
+You can choose either of two options:
+
+1. you want reading with old schema to give a null example.Address
+
+2. you want reading with old schema to give a default example.Address
+
+Either way, you must set `"default": null` on the "address" field (yes, no quotes).
+
+Then for option 1, set the type of address to be unioned with "null" (yes you need the quotes) as in:
+ 
+    "type": [ "null", { "type": "record", "name": "Address", ... } ]
+
+For option 2, don't do a union type but instead just provide defaults for each field of example.Address.
+
+
+TODO
+====
+
+* Improve validate-schema. Simply parsing is not enough. e.g. if default value has wrong type it will parse ok but
+fail at runtime with something like "Exception in thread "main" org.apache.avro.AvroTypeException: Non-string default value for string: null"

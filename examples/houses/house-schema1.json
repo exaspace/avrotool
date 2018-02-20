@@ -10,21 +10,23 @@
     {
       "name": "streetData",
       "default": null,
-      "type": {
+      "type": ["null", {
         "type": "record",
         "name": "StreetData",
         "namespace": "example",
         "fields": [
           {
             "name": "streetName",
-            "type": "string"
+            "type": "string",
+            "default": ""
           },
           {
             "name": "number",
-            "type": "int"
+            "type": "int",
+            "default": 0
           }
         ]
-      }
+      }]
 
     }
   ]

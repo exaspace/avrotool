@@ -3,7 +3,7 @@ package org.exaspace.avrotool
 import org.scalatest.{FlatSpec, Matchers}
 
 
-class UnwrapCommandSpec extends FlatSpec with Matchers with TempFiles {
+class UnwrapCommandSpec extends FlatSpec with Matchers with TempFileSupport {
 
   "UnwrapCommand" should "remove initial Confluent bytes if bytes appear to be valid" in {
     withTempFile(Array[Byte](0, 1, 2, 3, 4, 5)) { f =>
