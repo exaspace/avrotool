@@ -56,8 +56,11 @@ object Avrotool {
 
       case Actions.ValidateSchema =>
         new ValidateSchemaCommand(console).validate(
-          Paths.get(conf.schemaFile()),
-          OutputFormat(conf.format()))
+        Paths.get(conf.schemaFile()),
+        OutputFormat(conf.format()))
+
+      case Actions.Version =>
+        new VersionCommand(console).reportVersion()
 
       case Actions.WrapDatum =>
         new WrapCommand(console).wrap(Paths.get(conf.datumFile()), conf.schemaId())

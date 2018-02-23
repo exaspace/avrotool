@@ -120,6 +120,10 @@ class ArgsSpec extends FlatSpec with Matchers {
     shouldFail(new Args(Seq("--wrap-datum", "--datum-file", "1.avro")))
   }
 
+  "--version" should "not need arguments" in {
+    val conf = new Args(Seq("--version"))
+    conf.version() shouldBe true
+  }
 
   private def shouldFail(thunk: => Unit) = {
     throwError.withValue(true) {

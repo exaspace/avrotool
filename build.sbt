@@ -1,4 +1,9 @@
 
+name := "avrotool"
+organization := "org.exaspace"
+scalaVersion := "2.12.4"
+scalacOptions := Seq("-deprecation", "-unchecked")
+
 val argParseLibs = Seq(
   "org.rogach" %% "scallop" % "3.1.0",
 )
@@ -24,17 +29,6 @@ val testLibs = Seq(
   "org.scalatest" %% "scalatest" % "3.0.4"
 ).map(_ % Test)
 
+libraryDependencies ++= argParseLibs ++ jsonLibs ++ loggingLibs ++ avroLibs ++ httpLibs ++ testLibs
 
-lazy val root = (project in file("."))
-  .enablePlugins(JavaAppPackaging)
-  .settings(
-    inThisBuild(List(
-      organization := "org.exaspace",
-      scalaVersion := "2.12.4",
-      version := "0.1.0-SNAPSHOT",
-      scalacOptions := Seq("-deprecation", "-unchecked")
-    )),
-    name := "avrotool",
-    libraryDependencies ++= argParseLibs ++ jsonLibs ++
-        loggingLibs ++ avroLibs ++ httpLibs ++ testLibs
-  )
+lazy val root = (project in file(".")).enablePlugins(JavaAppPackaging)

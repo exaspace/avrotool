@@ -9,6 +9,7 @@ object Actions {
   val Register = "register"
   val UnwrapDatum = "unwrap-datum"
   val ValidateSchema = "validate-schema"
+  val Version = "version"
   val WrapDatum = "wrap-datum"
 }
 
@@ -44,6 +45,11 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     name = Actions.ValidateSchema,
     noshort = true,
     descr = "validate a schema (requires --schema-file)")
+
+  val version = opt[Boolean](
+    name = Actions.Version,
+    noshort = false,
+    descr = "report version number of this application")
 
   val wrapDatum = opt[Boolean](
     name = Actions.WrapDatum,
@@ -113,7 +119,7 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     descr = "schema file to use as writer schema")
 
 
-  private val actions = Seq(checkcompat, decodeDatum, register, unwrapDatum, validateSchema, wrapDatum)
+  private val actions = Seq(checkcompat, decodeDatum, register, unwrapDatum, validateSchema, version, wrapDatum)
 
   dependsOnAll(checkcompat, List(schemaFiles))
   dependsOnAll(decodeDatum, List(datumFile))
