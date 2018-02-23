@@ -1,12 +1,19 @@
 .PHONY: build clean test install
 
 PREFIX ?= "${HOME}/local"
+VERSION := $(shell git describe)
 
 build:
 	sbt compile pack
 
 clean:
 	sbt clean
+
+docker-build:
+	docker build -t exaspace/avrotool:$(VERSION) .
+
+docker-push:
+	docker push exaspace/avrotool:$(VERSION)
 
 install:
 	cd target/pack && $(MAKE) install PREFIX=${PREFIX}
