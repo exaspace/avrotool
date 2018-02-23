@@ -52,6 +52,15 @@ You can get JSON output using `--format json`:
     $ avrotool --wrap-datum --datum-file datum.avro --schema-id 123 > datum.cavro
 
 
+# Installation (docker)
+
+    docker run --rm exaspace/avrotool
+
+e.g. in the `examples` directory, run :
+
+    docker run --rm -v $(PWD):/tmp -w /tmp exaspace/avrotool --checkcompat --schema-files schema1.json schema2.json
+    
+
 # Installation (non-docker)
 
 Requirements:
