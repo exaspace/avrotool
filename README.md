@@ -54,26 +54,23 @@ You can get JSON output using `--format json`:
 
 # Installation (non-docker)
 
+Requirements:
 
-First ensure you have a JDK (version 8+) and [sbt](https://www.scala-sbt.org/download.html) installed (e.g. `brew install sbt`) 
+* Java 8 or greater 
+* [sbt](https://www.scala-sbt.org/download.html) (e.g. `brew install sbt`) 
 
-Clone this project and then from the top level run
+Then clone this project and then from the top level run
 
-    $ sbt pack
-    $ cd avrotool/target/pack/
-    $ sudo make install PREFIX=/usr/local
+    $ make build
+    $ sudo make install PREFIX=/opt/local
 
+To avoid sudo you could install under your home directory with `make install PREFIX="$HOME"` which will install avrotool 
+to `~/bin` or `make install` which installs avrotool to `~/local/bin` (tip: in this case, add `~/local/bin` to your `PATH`).
 
-Check it works (run from the project top level using the provided example schemas):
+Check it works: 
 
     $ avrotool --checkcompat --schema-files ./examples/schema1.json ./examples/schema2.json
     FULL
-
-If you want to install `avrotool` somewhere else, set the PREFIX variable 
-
-    make install PREFIX="$HOME"             # will install avrotool to ~/bin 
-    sudo make install PREFIX=/opt/local     # will install avrotool to /opt/local/bin
-    make install                            # will install avrotool to ~/local/bin (tip: add `~/local/bin` to your `PATH`).
 
 
 # Schema compatibility explained
