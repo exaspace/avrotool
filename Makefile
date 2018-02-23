@@ -11,6 +11,7 @@ clean:
 
 docker-build:
 	docker build -t exaspace/avrotool:$(VERSION) .
+	docker tag exaspace/avrotool:$(VERSION) exaspace/avrotool:latest
 
 docker-push:
 	docker push exaspace/avrotool:$(VERSION)
