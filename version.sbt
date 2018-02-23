@@ -1,5 +1,5 @@
 
-val readLatestGitTag = () => {
+val versionFromGitDescribe = () => {
   import scala.sys.process.stringToProcess
   import scala.util._
   val TaggedCommitRegex = """^(\d+)\.(\d+)\.(\d+)$""".r
@@ -11,17 +11,4 @@ val readLatestGitTag = () => {
   }
 }
 
-val writeVersionFile = Def.task {
-  val versionFile = ((resourceManaged in Compile).value / "VERSION")
-  streams.value.log.info(s"Generating version file $versionFile with contents ${version.value}")
-  sbt.IO.write(versionFile, version.value)
-  Seq(versionFile)
-}
-
-version in ThisBuild := readLatestGitTag()
-
-resourceGenerators in Compile += writeVersionFile.taskValue
-
-mappings in (Compile, packageBin) += {
-  (resourceManaged in Compile).value / "VERSION" -> "out/example.txt"
-}
+version in ThisBuild := versionFromGitDescribe()

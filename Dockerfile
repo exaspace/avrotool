@@ -1,5 +1,10 @@
-FROM hseeberger/scala-sbt:8u151-2.12.4-1.1.1
+FROM openjdk:9.0.1-jdk
+
 LABEL maintainer=ben.george@exaspace.org
-ADD . /avrotool/
-RUN cd /avrotool && sbt pack
-ENTRYPOINT /avrotool/docker/entrypoint.sh
+
+ADD target/pack /avrotool
+ADD docker/entrypoint.sh /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+CMD ["--help"]

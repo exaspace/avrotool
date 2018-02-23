@@ -1,4 +1,4 @@
-.PHONY: build clean test install
+.PHONY: build clean docker-build docker-push install test
 
 PREFIX ?= "${HOME}/local"
 VERSION := $(shell git describe)

@@ -1,5 +1,6 @@
 *.avro
 VERSION
+*.swp
 
 ### Scala ###
 *.class

@@ -1,17 +1,14 @@
 package org.exaspace.avrotool
 
-import scala.io.Source
-
 
 class VersionCommand(console: ConsoleOutput) {
 
   def reportVersion(): Boolean = {
-    val maybeVersion = tryToGetVersionFromVersionFile()
+    val maybeVersion = tryToGetVersionFromSysProp()
     console.println(maybeVersion.getOrElse("0.0.0"))
     true
   }
 
-  def tryToGetVersionFromVersionFile(): Option[String] =
-    Option(getClass.getResourceAsStream("/VERSION")).map(Source.fromInputStream(_).getLines().next())
+  def tryToGetVersionFromSysProp(): Option[String] = sys.props.get("prog.version")
 
 }
