@@ -66,12 +66,15 @@ You can get JSON output using `--format json`:
 
 # Installation (docker)
 
-    docker run --rm exaspace/avrotool
+Setup an alias for "avrotool"
 
-e.g. in the `examples` directory, run :
-
-    docker run --rm -v $(PWD):/tmp -w /tmp exaspace/avrotool --checkcompat --schema-files schema1.json schema2.json
+    $ alias avrotool='docker run --rm -v $(pwd):/tmp -w /tmp exaspace/avrotool'    
     
+Test it out 
+    
+    $ cd examples
+    $ avrotool --checkcompat --schema-files schema1.json schema2.json
+
 
 # Installation (non-docker)
 
