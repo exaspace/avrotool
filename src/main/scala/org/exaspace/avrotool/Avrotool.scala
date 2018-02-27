@@ -45,8 +45,14 @@ object Avrotool {
             registryClient(conf.schemaRegistryUrl()))
         }
 
+      case Actions.Delete =>
+        new DeleteSubjectCommand(console).delete(
+          conf.subject(),
+          conf.subjectVersion.toOption,
+          registryClient(conf.schemaRegistryUrl()))
+
       case Actions.Register =>
-        new RegisterSchemaCommand(console).register(
+        new RegisterSubjectCommand(console).register(
           Paths.get(conf.schemaFile()),
           conf.subject(),
           registryClient(conf.schemaRegistryUrl()))
@@ -58,9 +64,6 @@ object Avrotool {
         new ValidateSchemaCommand(console).validate(
         Paths.get(conf.schemaFile()),
         OutputFormat(conf.format()))
-
-      case Actions.Version =>
-        new VersionCommand(console).reportVersion()
 
       case Actions.WrapDatum =>
         new WrapCommand(console).wrap(Paths.get(conf.datumFile()), conf.schemaId())

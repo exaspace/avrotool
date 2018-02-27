@@ -6,14 +6,21 @@ import org.rogach.scallop.ScallopConf
 object Actions {
   val CheckCompat = "checkcompat"
   val DecodeDatum = "decode-datum"
+  val Delete = "delete"
   val Register = "register"
   val UnwrapDatum = "unwrap-datum"
   val ValidateSchema = "validate-schema"
-  val Version = "version"
   val WrapDatum = "wrap-datum"
 }
 
 class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
+
+  // the sbt-pack plugin bakes version/revision into the start script at build time
+  def versionFromSysProp(): String = {
+    Seq(sys.props.get("prog.version"), sys.props.get("prog.revision")).flatten.mkString(" ")
+  }
+
+  version(versionFromSysProp)
 
   private val formatValidation = (s: String) => s == "json" || s == "plain"
   private val validateSchemaFilesArg = (files: List[String]) => files.length >= 2
@@ -22,14 +29,19 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     name = Actions.CheckCompat,
     noshort = true,
     descr =
-    """
-      |check compatibility between schemas (compare first one to the other schemas in order)
-    """.stripMargin)
+      """
+        |check compatibility between schemas (compare first one to the other schemas in order)
+      """.stripMargin)
 
   val decodeDatum = opt[Boolean](
     name = Actions.DecodeDatum,
     noshort = true,
     descr ="""decode a confluent encoded avro datum (requires --datum-file and --schema-registry-url)""")
+
+  val delete = opt[Boolean](
+    name = Actions.Delete,
+    noshort = true,
+    descr ="""delete a subject from the registry (requires --subject, --schema-registry-url. Optional: --subject-version )""")
 
   val register = opt[Boolean](
     name = Actions.Register,
@@ -46,16 +58,10 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     noshort = true,
     descr = "validate a schema (requires --schema-file)")
 
-  val version = opt[Boolean](
-    name = Actions.Version,
-    noshort = false,
-    descr = "report version number of this application")
-
   val wrapDatum = opt[Boolean](
     name = Actions.WrapDatum,
     noshort = true,
     descr = "apply initial 5 byte prefix to a plain Avro binary datum (requires --datum-file and --schema-id)")
-
 
 
   val schemaId = opt[Int](
@@ -108,6 +114,11 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     noshort = true,
     descr = "schema registry subject")
 
+  val subjectVersion = opt[String](
+    name = "subject-version",
+    noshort = false,
+    descr = "version of a schema")
+
   val verbose = opt[Boolean](
     name = "verbose",
     noshort = false,
@@ -119,11 +130,12 @@ class Args(arguments: Seq[String]) extends ScallopConf(arguments) {
     descr = "schema file to use as writer schema")
 
 
-  private val actions = Seq(checkcompat, decodeDatum, register, unwrapDatum, validateSchema, version, wrapDatum)
+  private val actions = Seq(checkcompat, decodeDatum, delete, register, unwrapDatum, validateSchema, wrapDatum)
 
   dependsOnAll(checkcompat, List(schemaFiles))
   dependsOnAll(decodeDatum, List(datumFile))
   dependsOnAny(decodeDatum, List(schemaRegistryUrl, writerSchemaFile))
+  dependsOnAll(delete, List(schemaRegistryUrl, subject))
   dependsOnAll(register, List(schemaFile, subject, schemaRegistryUrl))
   dependsOnAll(unwrapDatum, List(datumFile))
   dependsOnAll(validateSchema, List(schemaFile))

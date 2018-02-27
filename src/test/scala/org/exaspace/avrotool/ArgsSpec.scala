@@ -68,6 +68,25 @@ class ArgsSpec extends FlatSpec with Matchers {
     shouldFail(new Args(Seq("--decode-datum", "--datum-file", "foo.avro", "--reader-schema-file", "schema.json")))
   }
 
+  "--delete" should "accept --subject and --schema-registry-url" in {
+    val conf = new Args(Seq("--delete", "--subject", "foobar", "--schema-registry-url", "http://someurl/"))
+    conf.delete() shouldBe true
+    conf.subject() shouldBe "foobar"
+    conf.schemaRegistryUrl() shouldBe "http://someurl/"
+  }
+
+  it should "fail if missing --subject" in {
+    shouldFail(new Args(Seq("--delete", "--schema-registry-url", "http://someurl")))
+  }
+
+  it should "accept --subject and --schema-registry-url and --subject-version" in {
+    val conf = new Args(Seq("--delete", "--subject", "xx", "--subject-version", "22", "--schema-registry-url", "http://someurl/"))
+    conf.delete() shouldBe true
+    conf.subject() shouldBe "xx"
+    conf.subjectVersion() shouldBe "22"
+    conf.schemaRegistryUrl() shouldBe "http://someurl/"
+  }
+
   "--register" should "accept --schema-file and --schema-registry-url" in {
     val conf = new Args(Seq("--register", "--schema-file", "foo.avsc", "--subject", "foo", "--schema-registry-url", "http://someurl"))
     conf.register() shouldBe true
@@ -120,9 +139,19 @@ class ArgsSpec extends FlatSpec with Matchers {
     shouldFail(new Args(Seq("--wrap-datum", "--datum-file", "1.avro")))
   }
 
-  "--version" should "not need arguments" in {
-    val conf = new Args(Seq("--version"))
-    conf.version() shouldBe true
+  "Scallop version" should "be set from sys props" in {
+    val conf = new Args(Seq("--decode-datum", "--datum-file", "foo", "--schema-registry-url", "http://someurl"))
+    val maybeCurrVersion = sys.props.get("prog.version")
+    val maybeCurrRevision = sys.props.get("prog.revision")
+    try {
+      sys.props += "prog.version" -> "0.9.2323"
+      sys.props += "prog.revision" -> "abcdef"
+      conf.versionFromSysProp shouldBe "0.9.2323 abcdef"
+    }
+    finally {
+      maybeCurrVersion.foreach(v => sys.props += "prog.version" -> v)
+      maybeCurrRevision.foreach(v => sys.props += "prog.revision" -> v)
+    }
   }
 
   private def shouldFail(thunk: => Unit) = {

@@ -8,6 +8,7 @@ import spray.json.{DefaultJsonProtocol, JsString, _}
 trait RegistryClient {
   def register(subject: String, s: Schema): Option[Int]
   def fetchById(id: Int): Option[Schema]
+  def deleteSubject(subject: String, version: Option[String] = None): Option[String]
 }
 
 case class SchemaData(schema: String)
@@ -42,6 +43,15 @@ class RegistryHttpClient(schemaRegistryUrl: String) extends RegistryClient {
         val js = body.parseJson.asJsObject
         val schemaStr = js.getFields("schema")(0).asInstanceOf[JsString].value
         Some(ParseSchema.fromString(schemaStr))
+      case Left(_) => scala.None
+    }
+  }
+
+  override def deleteSubject(subject: String, version: Option[String]): Option[String] = {
+    val path = version.fold(s"/subjects/$subject")(_ => s"/subjects/$subject/versions/${version.get}")
+    val uri = Uri(new URI(schemaRegistryUrl)).path(path)
+    sttp.contentType("application/json").delete(uri).send().body match {
+      case Right(responseBody) => Some(responseBody.parseJson.toString)
       case Left(_) => scala.None
     }
   }

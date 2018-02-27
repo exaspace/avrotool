@@ -37,7 +37,7 @@ You can get JSON output using `--format json`:
     VALID
 
 
-**Decode a Confluent Avro binary datum and print as JSON (fetching the schema from the schema registry)**
+**Decode a Confluent Avro binary datum and print as JSON (fetching the schema from a schema registry)**
 
     $ avrotool --decode --datum-file foo.cavro --schema-registry-url http://myregistry.com/
     { "name": "fred" }
@@ -50,6 +50,18 @@ You can get JSON output using `--format json`:
 **Convert a plain Avro binary datum to a Confluent Avro binary datum** 
 
     $ avrotool --wrap-datum --datum-file datum.avro --schema-id 123 > datum.cavro
+
+**Register a schema with a subject in a schema registry** 
+
+    $ avrotool --register --subject foo --schema-file foo.avsc --schema-registry-url 'http://localhost:8081/'
+
+**Delete a subject in a schema registry** 
+
+    $ avrotool --delete --subject foo --schema-registry-url 'http://localhost:8081/'
+
+**Delete a single version of a subject in a schema registry** 
+
+    $ avrotool --delete --subject foo --subject-version 42 --schema-registry-url 'http://localhost:8081/'
 
 
 # Installation (docker)

@@ -59,7 +59,7 @@ class DecodeDatumCommandSpec extends FlatSpec with Matchers with TempFileSupport
     }
   }
 
-  "DecodeDatumCommand" should "decode a datum file using a specified writer schema file" in {
+  it should "decode a datum file using a specified writer schema file" in {
     val record = new GenericData.Record(userSchema)
     record.put("name", "foo")
     val avroBytes = toAvroBinary(record)
@@ -71,7 +71,7 @@ class DecodeDatumCommandSpec extends FlatSpec with Matchers with TempFileSupport
     }
   }
 
-  "DecodeDatumCommand" should "decode a datum file using a specified reader & writer schema files" in {
+  it should "decode a datum file using a specified reader & writer schema files" in {
     val record = new GenericData.Record(userSchema)
     record.put("name", "foo")
     val avroBytes = toAvroBinary(record)
@@ -83,7 +83,7 @@ class DecodeDatumCommandSpec extends FlatSpec with Matchers with TempFileSupport
     }
   }
 
-  def toConfluentAvroBinary(id: Int, b: Array[Byte]): Array[Byte] = {
+  private def toConfluentAvroBinary(id: Int, b: Array[Byte]): Array[Byte] = {
     val bb = ByteBuffer.allocate(5 + b.length)
     bb.put(0.toByte)
     bb.putInt(id)
@@ -91,7 +91,7 @@ class DecodeDatumCommandSpec extends FlatSpec with Matchers with TempFileSupport
     bb.array
   }
 
-  def toAvroBinary(rec: GenericData.Record): Array[Byte] = {
+  private def toAvroBinary(rec: GenericData.Record): Array[Byte] = {
     val gdw = new GenericDatumWriter[GenericData.Record](rec.getSchema)
     val out = new ByteArrayOutputStream
     val encoder = EncoderFactory.get().binaryEncoder(out, null)
@@ -103,9 +103,11 @@ class DecodeDatumCommandSpec extends FlatSpec with Matchers with TempFileSupport
 
   class TestSchemaRegistry(s: Schema) extends RegistryClient {
 
+    override def fetchById(id: Int): Option[Schema] = Some(s)
+
     override def register(subject: String, s: Schema): Option[Int] = ???
 
-    override def fetchById(id: Int): Option[Schema] = Some(s)
+    override def deleteSubject(subject: String, version: Option[String]): Option[String] = ???
   }
 
 }
