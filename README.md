@@ -1,5 +1,5 @@
-# Avrotool 
- 
+# Avrotool
+
 A CLI tool for comparing Avro schemas and working with the Confluent flavour of Avro.
 
 
@@ -9,7 +9,7 @@ A CLI tool for comparing Avro schemas and working with the Confluent flavour of 
 * the standard Apache Avro tools do not understand anything about schema registries, or the Confluent Avro binary format (which contains a 5 byte prefix)
 
 
-# Example usages
+# Usage
 
 **Check compatibility between Avro schemas**
 
@@ -31,7 +31,7 @@ You can get JSON output using `--format json`:
     {"schema1.json":"FULL"}
 
 
-**Check an Avro schema is valid** 
+**Check an Avro schema is valid**
 
     $ avrotool --validate-schema --schema-file schema.json
     VALID
@@ -42,24 +42,24 @@ You can get JSON output using `--format json`:
     $ avrotool --decode --datum-file foo.cavro --schema-registry-url http://myregistry.com/
     { "name": "fred" }
 
-**Convert a Confluent Avro binary datum to a plain Avro binary datum** 
+**Convert a Confluent Avro binary datum to a plain Avro binary datum**
 
     $ avrotool --unwrap-datum --datum-file datum.cavro > datum.avro
 
 
-**Convert a plain Avro binary datum to a Confluent Avro binary datum** 
+**Convert a plain Avro binary datum to a Confluent Avro binary datum**
 
     $ avrotool --wrap-datum --datum-file datum.avro --schema-id 123 > datum.cavro
 
-**Register a schema with a subject in a schema registry** 
+**Register a schema with a subject in a schema registry**
 
     $ avrotool --register --subject foo --schema-file foo.avsc --schema-registry-url 'http://localhost:8081/'
 
-**Delete a subject in a schema registry** 
+**Delete a subject in a schema registry**
 
     $ avrotool --delete --subject foo --schema-registry-url 'http://localhost:8081/'
 
-**Delete a single version of a subject in a schema registry** 
+**Delete a single version of a subject in a schema registry**
 
     $ avrotool --delete --subject foo --subject-version 42 --schema-registry-url 'http://localhost:8081/'
 
@@ -68,10 +68,10 @@ You can get JSON output using `--format json`:
 
 Setup an alias for "avrotool"
 
-    $ alias avrotool='docker run --rm -v $(pwd):/tmp -w /tmp exaspace/avrotool'    
-    
-Test it out 
-    
+    $ alias avrotool='docker run --rm -v $(pwd):/tmp -w /tmp exaspace/avrotool'
+
+Test it out
+
     $ cd examples
     $ avrotool --checkcompat --schema-files schema1.json schema2.json
 
@@ -80,18 +80,18 @@ Test it out
 
 Requirements:
 
-* Java 8 or greater 
-* [sbt](https://www.scala-sbt.org/download.html) (e.g. `brew install sbt`) 
+* Java 8 or greater
+* [sbt](https://www.scala-sbt.org/download.html) (e.g. `brew install sbt`)
 
 Then clone this project and then from the top level run
 
     $ make build
     $ sudo make install PREFIX=/opt/local
 
-To avoid sudo you could install under your home directory with `make install PREFIX="$HOME"` which will install avrotool 
+To avoid sudo you could install under your home directory with `make install PREFIX="$HOME"` which will install avrotool
 to `~/bin` or `make install` which installs avrotool to `~/local/bin` (tip: in this case, add `~/local/bin` to your `PATH`).
 
-Check it works: 
+Check it works:
 
     $ avrotool --checkcompat --schema-files ./examples/schema1.json ./examples/schema2.json
     FULL
@@ -149,10 +149,10 @@ Then the following pairwise compatibility relationships exist:
     4->3: BACKWARDS
     4->2: NONE
     4->1: FORWARDS
-    
+
     3->2: FULL
     3->1: FORWARDS
-    
+
     2->1: FULL
 
 
@@ -171,7 +171,7 @@ You can choose either of two options:
 Either way, you must set `"default": null` on the "address" field (yes, no quotes).
 
 Then for option 1, set the type of address to be unioned with "null" (yes you need the quotes) as in:
- 
+
     "type": [ "null", { "type": "record", "name": "Address", ... } ]
 
 For option 2, don't do a union type but instead just provide defaults for each field of example.Address.
