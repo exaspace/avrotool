@@ -1,4 +1,4 @@
-FROM openjdk:9.0.1-jdk
+FROM eclipse-temurin:18
 
 LABEL maintainer=ben.george@exaspace.org
 

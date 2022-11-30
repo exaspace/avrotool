@@ -1,0 +1,35 @@
+name: Docker pipeline workflow
+on:
+  workflow_dispatch:
+    # allow manual triggering
+
+  schedule:
+    # trigger every Thursday
+    - cron:  '* * * * 4'    
+  
+  push:
+    # trigger when a tag is pushed
+    tags:
+      - '*'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Check out code"
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Checkout latest release tag
+        run: |
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          git checkout $LATEST_TAG
+
+      - name: "make build"
+        run: make build
+
+      - name: "make push"
+        run: make docker-push
+        env: 
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}

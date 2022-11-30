@@ -10,5 +10,4 @@ val versionFromGitDescribe = () => {
     case Failure(_) => "0.0.0"
   }
 }
-
 version in ThisBuild := versionFromGitDescribe()

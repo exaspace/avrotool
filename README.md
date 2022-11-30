@@ -80,18 +80,21 @@ Test it out
 
 Requirements:
 
-* Java 8 or greater
+* Java 11+
 * [sbt](https://www.scala-sbt.org/download.html) (e.g. `brew install sbt`)
 
-Then clone this project and then from the top level run
+1. clone this project and then from the top level run
 
-    $ make build
-    $ sudo make install PREFIX=/opt/local
 
-To avoid sudo you could install under your home directory with `make install PREFIX="$HOME"` which will install avrotool
-to `~/bin` or `make install` which installs avrotool to `~/local/bin` (tip: in this case, add `~/local/bin` to your `PATH`).
+        $ make build
+        $ make install
 
-Check it works:
+
+This installs the application into `~/local/bin` by default (you can change this with `make install PREFIX="/some/dir"` which will install avrotool to `/some/dir/bin`.
+
+2. Add the bin directory containing avrotool to your PATH.
+
+3. Now check it works:
 
     $ avrotool --checkcompat --schema-files ./examples/schema1.json ./examples/schema2.json
     FULL

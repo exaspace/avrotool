@@ -1,7 +1,7 @@
 .PHONY: build clean docker-build docker-push install test
 
 PREFIX ?= "${HOME}/local"
-VERSION := $(shell git describe)
+VERSION := $(shell git describe --tags)
 
 build:
 	sbt compile pack
@@ -9,11 +9,16 @@ build:
 clean:
 	sbt clean
 
-docker-build:
+docker-build: build
 	docker build -t exaspace/avrotool:$(VERSION) ./
 	docker tag exaspace/avrotool:$(VERSION) exaspace/avrotool:latest
 
-docker-push:
+docker-login: 
+	# WARNING ensure silent output to avoid printing secrets to stdout
+	@test -n "$(DOCKER_HUB_TOKEN)"
+	@echo $(DOCKER_HUB_TOKEN) | docker login --username exaspace --password-stdin
+
+docker-push: docker-build docker-login
 	docker push exaspace/avrotool:$(VERSION)
 	docker push exaspace/avrotool:latest
 
