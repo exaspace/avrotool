@@ -1,5 +1,7 @@
 # Avrotool
 
+[![Docker pipeline workflow](https://github.com/exaspace/avrotool/actions/workflows/main.yml/badge.svg)](https://github.com/exaspace/avrotool/actions/workflows/main.yml)
+
 A CLI tool for comparing Avro schemas and working with the Confluent flavour of Avro.
 
 
@@ -96,8 +98,9 @@ This installs the application into `~/local/bin` by default (you can change this
 
 3. Now check it works:
 
-    $ avrotool --checkcompat --schema-files ./examples/schema1.json ./examples/schema2.json
-    FULL
+
+        $ avrotool --checkcompat --schema-files ./examples/schema1.json ./examples/schema2.json
+        FULL
 
 
 # Schema compatibility explained
