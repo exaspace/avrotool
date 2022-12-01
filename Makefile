@@ -4,7 +4,7 @@ PREFIX ?= "${HOME}/local"
 VERSION := $(shell git describe --tags)
 
 build:
-	sbt compile pack
+	sbt compile test pack
 
 clean:
 	sbt clean
